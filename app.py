@@ -95,8 +95,6 @@ def index():
     ''', result=result)
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
 import os
 
 if __name__ == '__main__':
