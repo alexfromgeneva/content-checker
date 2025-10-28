@@ -1,55 +1,107 @@
+# WMO Translation Accuracy Checker
 
-# Content Quality Checker
-
-This is a simple web-based tool to check web content against:
-
-- Your corporate style guide
-- Web writing best practices (clarity, tone, structure)
-- Basic readability metrics
+A Flask-based API for validating translations of World Meteorological Organization (WMO) content against UN translation guidelines and WMO terminology standards. The service supports English, French, Spanish, Arabic, Simplified Chinese, and Russian.
 
 ## Features
 
-- Style rule enforcement (customizable)
-- Passive voice detection
-- Long sentence detection
-- Flesch Reading Ease score
-- Simple web interface for paste-in content
+- **Terminology validation** using an embedded UNTERM/WMO sample glossary
+- **Country name verification** against official UN forms
+- **Numeric consistency checks** to ensure all figures are preserved
+- **Formatting and style heuristics** that flag spacing and punctuation risks
+- **Weighted scoring** (terminology, grammar, style, completeness, formatting)
+- **Single and batch analysis** endpoints
+- **Secure file text extraction** for `.txt`, `.docx`, and `.xlsx` files with size limits
 
-## Getting Started
+## API Overview
 
-### Requirements
+### Health Check
 
-- Python 3.7+
-- Flask
-- textstat
+```
+GET /api/health
+```
 
-### Installation
+Returns service status and the supported language codes.
+
+### Extract Text from File
+
+```
+POST /api/extract-text
+Content-Type: multipart/form-data (field: file)
+```
+
+Extracts UTF-8 text from supported file types. Useful for preprocessing batch uploads before running translation checks.
+
+### Translation Check
+
+```
+POST /api/check-translation
+Content-Type: application/json
+```
+
+Example payload:
+
+```json
+{
+  "sourceText": "The atmosphere is warming over Canada.",
+  "sourceLanguage": "en",
+  "translations": {
+    "fr": "L'atmosphère se réchauffe au Canada.",
+    "es": "La atmósfera se está calentando sobre Canadá."
+  }
+}
+```
+
+The response includes accuracy scores, issues (with severity, suggestions, and references), strengths, and verified terminology for each target language.
+
+### Batch Translation Check
+
+```
+POST /api/check-translation/batch
+Content-Type: application/json
+```
+
+Submit multiple translation objects (e.g., one per uploaded file). Each result echoes the source metadata and per-language assessments.
+
+## Running Locally
 
 1. Install dependencies:
-   ```
+
+   ```bash
    pip install -r requirements.txt
    ```
 
-2. Run the app:
-   ```
+2. Start the development server:
+
+   ```bash
    python app.py
    ```
 
-3. Open your browser and go to:
-   ```
-   http://localhost:5000
-   ```
+3. The API listens on `http://localhost:5000` by default.
 
-## Hosting
+## Environment Variables
 
-This tool can be hosted for free on [Render](https://render.com).
+| Variable | Purpose | Default |
+| -------- | ------- | ------- |
+| `PORT` | Flask server port | `5000` |
 
-1. Upload the files to a GitHub repository
-2. Create a new Web Service on Render
-3. Use:
-   - Build command: `pip install -r requirements.txt`
-   - Start command: `python app.py`
+## Extending Terminology Coverage
+
+The current implementation ships with a small embedded glossary suitable for demos. For production use you should:
+
+1. Replace `TERMINOLOGY_DB` and `COUNTRY_TERMS` in `app.py` with data sourced from UNTERM/WMO APIs.
+2. Add caching for terminology lookups to avoid rate limits.
+3. Persist terminology and translation history using a relational database.
+
+## Testing
+
+At minimum ensure the module loads successfully:
+
+```bash
+python -m compileall app.py
+```
+
+Add unit and integration tests as the service evolves to cover terminology ingestion, scoring logic, and file parsing.
 
 ## License
 
-This project is provided as-is for internal or personal use.
+Provided as-is for internal or personal use. Ensure compliance with UN and WMO content licensing when deploying.
