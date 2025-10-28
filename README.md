@@ -40,7 +40,7 @@ This is a simple web-based tool to check web content against:
    http://localhost:5000
    ```
 
-## Hosting
+## Hosting & Deployment
 
 This tool can be hosted for free on [Render](https://render.com).
 
@@ -49,6 +49,10 @@ This tool can be hosted for free on [Render](https://render.com).
 3. Use:
    - Build command: `pip install -r requirements.txt`
    - Start command: `python app.py`
+
+For teams building more advanced translation quality workflows, including
+multi-environment Node.js deployments and cloud infrastructure guidance, see
+the [WMO Translation Checker - Deployment Guide](docs/DEPLOYMENT.md).
 
 ## License
 
