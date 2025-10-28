@@ -1,55 +1,132 @@
+# WMO Translation Accuracy Checker
 
-# Content Quality Checker
-
-This is a simple web-based tool to check web content against:
-
-- Your corporate style guide
-- Web writing best practices (clarity, tone, structure)
-- Basic readability metrics
+A comprehensive tool for validating translations against UN/WMO standards.
 
 ## Features
 
-- Style rule enforcement (customizable)
-- Passive voice detection
-- Long sentence detection
-- Flesch Reading Ease score
-- Simple web interface for paste-in content
+- Multi-language support (EN, FR, ES, AR, ZH, RU)
+- UNTERM integration for terminology validation
+- WMO glossary compliance checking
+- Batch file processing (TXT, DOCX, XLSX)
+- Real-time AI-powered analysis
+- Detailed issue reporting with severity levels
+- Export results to JSON
 
-## Getting Started
+## Installation
 
-### Requirements
+### Prerequisites
+- Node.js 18+
+- Anthropic API key
 
-- Python 3.7+
-- Flask
-- textstat
+### Setup
 
-### Installation
+1. Clone the repository
+```bash
+git clone https://github.com/yourorg/wmo-translation-checker.git
+cd wmo-translation-checker
+```
 
-1. Install dependencies:
-   ```
-   pip install -r requirements.txt
-   ```
+2. Install dependencies
+```bash
+npm install
+```
 
-2. Run the app:
-   ```
-   python app.py
-   ```
+3. Configure environment
+```bash
+cp .env.example .env
+# Edit .env and add your ANTHROPIC_API_KEY
+```
 
-3. Open your browser and go to:
-   ```
-   http://localhost:5000
-   ```
+4. Start the backend server
+```bash
+npm run dev
+```
 
-## Hosting
+5. Start the frontend (in another terminal)
+```bash
+npm start
+```
 
-This tool can be hosted for free on [Render](https://render.com).
+## Usage
 
-1. Upload the files to a GitHub repository
-2. Create a new Web Service on Render
-3. Use:
-   - Build command: `pip install -r requirements.txt`
-   - Start command: `python app.py`
+### API Endpoints
+
+#### Check Single Translation
+```bash
+POST /api/check-translation
+Content-Type: application/json
+
+{
+  "sourceText": "The World Meteorological Organization...",
+  "targetText": "L'Organisation météorologique mondiale...",
+  "sourceLang": "English",
+  "targetLang": "French"
+}
+```
+
+#### Batch Check
+```bash
+POST /api/check-batch
+Content-Type: application/json
+
+{
+  "translations": [
+    {
+      "sourceText": "...",
+      "targetText": "...",
+      "sourceLang": "English",
+      "targetLang": "French"
+    }
+  ]
+}
+```
+
+## Development
+
+### Project Structure
+```
+wmo-translation-checker/
+├── src/
+│   ├── components/
+│   │   └── WMOTranslationChecker.jsx
+│   ├── utils/
+│   └── App.js
+├── server.js
+├── package.json
+└── .env
+```
+
+### Testing
+```bash
+npm test
+```
+
+### Linting
+```bash
+npm run lint
+```
+
+## Deployment
+
+### Docker
+```bash
+docker build -t wmo-translation-checker .
+docker run -p 3001:3001 --env-file .env wmo-translation-checker
+```
+
+### Manual Deployment
+1. Build the frontend: `npm run build`
+2. Deploy build folder to static hosting (Vercel, Netlify, etc.)
+3. Deploy backend to Node.js hosting (Heroku, AWS, etc.)
+
+## Configuration
+
+See `.env.example` for all configuration options.
 
 ## License
 
-This project is provided as-is for internal or personal use.
+Proprietary - All rights reserved
+
+## Support
+
+For issues and questions, contact: support@example.com
